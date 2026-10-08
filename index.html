@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>【轉生者】零號聖女・艾莉西亞 ｜ 3D 鐳射動態傳奇卡牌</title>
-  <meta name="description" content="零號聖女・艾莉西亞（Saint Zero: Alicia）專屬 3D 視差與冷冽銀鏡鐳射全息反光傳奇卡牌展示系統。">
+  <title>轉生聖女・艾莉西亞 ｜ 3D 鐳射動態傳奇卡牌</title>
+  <meta name="description" content="轉生聖女・艾莉西亞（Saint Zero: Alicia）專屬 3D 視差與冷冽銀鏡鐳射全息反光傳奇卡牌展示系統。">
   
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Cinzel+Decorative:wght@700;900&family=Noto+Serif+TC:wght@500;700;900&family=Orbitron:wght@500;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
   <!-- html2canvas for High-Res PNG Export -->
@@ -28,8 +28,8 @@
       --accent-cyan: #38bdf8;
       --gold-accent: #f59e0b;
       
-      --foil-opacity: 0.85;
-      --glare-opacity: 0.9;
+      --foil-opacity: 0.2;
+      --glare-opacity: 0.3;
       --tilt-sensitivity: 1;
 
       /* Card Dynamic Tilt Variables */
@@ -193,13 +193,14 @@
     .card-wrapper {
       position: relative;
       width: var(--card-width);
-      aspect-ratio: 63 / 88;
+      aspect-ratio: 63 / 112;
       border-radius: 20px;
       transform-style: preserve-3d;
       transform: rotateX(var(--rx)) rotateY(var(--ry));
       transition: transform 0.12s cubic-bezier(0.1, 0.4, 0.2, 1);
       cursor: grab;
       touch-action: none;
+      box-sizing: border-box;
       box-shadow: 
         0 25px 60px -15px rgba(0, 0, 0, 0.8),
         0 0 35px rgba(147, 51, 234, 0.35),
@@ -215,7 +216,7 @@
       cursor: grabbing;
     }
 
-    /* Card Sides (Front & Back) */
+    /* Card Sides (Front & Back) - 絕對定位貼齊 wrapper */
     .card-face {
       position: absolute;
       inset: 0;
@@ -225,6 +226,7 @@
       overflow: hidden;
       background: var(--card-bg);
       transform-style: preserve-3d;
+      box-sizing: border-box;
     }
 
     /* ==========================================================================
@@ -238,7 +240,7 @@
       background: 
         radial-gradient(circle at 50% 0%, #201736 0%, #0d0a17 60%, #05040a 100%);
       box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.9);
-      position: relative;
+      box-sizing: border-box;
     }
 
     /* Intricate Metallic Border & Corner Filigrees */
@@ -356,8 +358,9 @@
     /* 2. CARD ARTWORK CANVAS AREA */
     .art-container {
       position: relative;
+	  inset: 0;
       width: 100%;
-      height: 44%;
+      height: 100%;
       border-radius: 10px;
       overflow: hidden;
       border: 2px solid #3e3357;
@@ -371,7 +374,8 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: center 20%;
+	  object-position: center 15%;
+	  background: #05040a;
       display: block;
       transition: transform 0.4s ease;
     }
@@ -708,7 +712,7 @@
       align-items: center;
       justify-content: center;
       padding: 20px;
-      position: relative;
+      box-sizing: border-box;
     }
     .back-mandala-seal {
       width: 82%;
@@ -945,7 +949,7 @@
       cursor: pointer;
     }
 
-    /* Export Button (Special Masterpiece Highlight) */
+    /* Export Button */
     .export-btn {
       background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
       border: 1px solid rgba(255, 255, 255, 0.25);
@@ -1046,7 +1050,7 @@
             </div>
             
             <h1 class="card-title-name" contenteditable="true" spellcheck="false" id="field-title">
-              【轉生者】零號聖女・艾莉西亞
+              轉生聖女・艾莉西亞
             </h1>
 
             <div class="hp-cluster">
@@ -1058,7 +1062,7 @@
 
           <!-- 2. Art Canvas -->
           <div class="art-container" id="card-art-box">
-            <img src="./alicia_art.jpg" alt="零號聖女・艾莉西亞立繪" class="art-image" id="card-art-img" onerror="this.src='https://picsum.photos/600/800?grayscale'">
+            <img src="./alicia_art.jpg" alt="轉生聖女・艾莉西亞立繪" class="art-image" id="card-art-img" onerror="this.src='https://picsum.photos/600/800?grayscale'">
             <div class="art-sub-banner">
               <span contenteditable="true" spellcheck="false" id="field-subtitle">Saint Zero: Alicia ｜ 虛無銀紫</span>
               <span contenteditable="true" spellcheck="false" id="field-subspec">GENESIS BIO-MECHA</span>
@@ -1229,16 +1233,16 @@
           <div class="slider-row">
             <div class="slider-label-wrap">
               <span>全息光斑強度 (Foil Opacity)</span>
-              <span id="label-foil-val">85%</span>
+              <span id="label-foil-val">20%</span>
             </div>
-            <input type="range" min="0" max="100" value="85" class="slider-input" id="slider-foil">
+            <input type="range" min="0" max="100" value="20" class="slider-input" id="slider-foil">
           </div>
           <div class="slider-row">
             <div class="slider-label-wrap">
               <span>反光高光亮度 (Glare Intensity)</span>
-              <span id="label-glare-val">90%</span>
+              <span id="label-glare-val">30%</span>
             </div>
-            <input type="range" min="0" max="100" value="90" class="slider-input" id="slider-glare">
+            <input type="range" min="0" max="100" value="30" class="slider-input" id="slider-glare">
           </div>
         </div>
       </section>
@@ -1304,7 +1308,6 @@
       const maxTilt = 24; // Degrees
 
       function updateCardTransform(xPct, yPct) {
-        // xPct, yPct from 0 to 1
         const rotY = (xPct - 0.5) * (maxTilt * 2);
         const rotX = (0.5 - yPct) * (maxTilt * 2);
 
@@ -1342,7 +1345,6 @@
         let x = (clientX - rect.left) / rect.width;
         let y = (clientY - rect.top) / rect.height;
 
-        // Clamp between 0 and 1
         x = Math.max(0, Math.min(1, x));
         y = Math.max(0, Math.min(1, y));
 
@@ -1358,7 +1360,6 @@
         if (!gyroActive) resetCardTransform();
       });
 
-      // Window global track when dragging
       window.addEventListener('touchmove', (e) => {
         if (isInteracting) {
           handlePointerMove(e);
@@ -1464,13 +1465,11 @@
 
       function handleOrientation(e) {
         if (!gyroActive || isInteracting) return;
-        // gamma: left to right [-90, 90]
-        // beta: front to back [-180, 180]
         const gamma = e.gamma || 0;
         const beta = e.beta || 0;
 
         const clampedGamma = Math.max(-30, Math.min(30, gamma));
-        const clampedBeta = Math.max(10, Math.min(70, beta)) - 40; // centered at ~40deg hold angle
+        const clampedBeta = Math.max(10, Math.min(70, beta)) - 40;
 
         const xPct = (clampedGamma + 30) / 60;
         const yPct = (clampedBeta + 30) / 60;
@@ -1483,7 +1482,6 @@
         showToast('正在鑄造高解析度卡牌收藏圖...');
         
         try {
-          // Temporarily ensure card is flat for perfect artifact snapshot
           const currentRx = getComputedStyle(document.documentElement).getPropertyValue('--rx');
           const currentRy = getComputedStyle(document.documentElement).getPropertyValue('--ry');
           
@@ -1493,18 +1491,16 @@
           const targetFace = isFlipped ? card.querySelector('.card-back') : card.querySelector('.card-front');
           
           const canvas = await html2canvas(targetFace, {
-            scale: 3, // 3x Ultra-High Resolution
+            scale: 3,
             useCORS: true,
             allowTaint: true,
             backgroundColor: null,
             logging: false
           });
 
-          // Restore tilt
           document.documentElement.style.setProperty('--rx', currentRx);
           document.documentElement.style.setProperty('--ry', currentRy);
 
-          // Download PNG
           const link = document.createElement('a');
           const filename = isFlipped ? 'Saint_Alicia_Card_Back.png' : 'Saint_Alicia_ORIGIN_LEGEND.png';
           link.download = filename;
