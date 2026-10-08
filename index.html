@@ -1478,10 +1478,11 @@
       }
 
       // Export as High-Res PNG with html2canvas
-      btnExport.addEventListener('click', async () => {
+     btnExport.addEventListener('click', async () => {
         showToast('正在鑄造高解析度卡牌收藏圖...');
         
         try {
+          
           const currentRx = getComputedStyle(document.documentElement).getPropertyValue('--rx');
           const currentRy = getComputedStyle(document.documentElement).getPropertyValue('--ry');
           
@@ -1489,18 +1490,48 @@
           document.documentElement.style.setProperty('--ry', '0deg');
 
           const targetFace = isFlipped ? card.querySelector('.card-back') : card.querySelector('.card-front');
-          
+          const artBox = targetFace.querySelector('.art-container');
+
+         
+          const targetRect = targetFace.getBoundingClientRect();
+          const artBoxRect = artBox ? artBox.getBoundingClientRect() : null;
+
+          // 3. 呼叫 html2canvas，並透過 onclone 強制鎖定尺寸與網頁一致
           const canvas = await html2canvas(targetFace, {
             scale: 3,
             useCORS: true,
             allowTaint: true,
             backgroundColor: null,
-            logging: false
+            logging: false,
+            width: targetRect.width,
+            height: targetRect.height,
+            onclone: (clonedDoc) => {
+              
+              const clonedFace = isFlipped 
+                ? clonedDoc.querySelector('.card-back') 
+                : clonedDoc.querySelector('.card-front');
+              
+              if (clonedFace) {
+                clonedFace.style.width = `${targetRect.width}px`;
+                clonedFace.style.height = `${targetRect.height}px`;
+                clonedFace.style.position = 'relative';
+                clonedFace.style.inset = 'auto';
+              }
+
+              
+              const clonedArtBox = clonedFace ? clonedFace.querySelector('.art-container') : null;
+              if (clonedArtBox && artBoxRect) {
+                clonedArtBox.style.height = `${artBoxRect.height}px`;
+                clonedArtBox.style.flex = 'none'; // 禁止 html2canvas 自動拉長立繪
+              }
+            }
           });
 
+          
           document.documentElement.style.setProperty('--rx', currentRx);
           document.documentElement.style.setProperty('--ry', currentRy);
 
+          
           const link = document.createElement('a');
           const filename = isFlipped ? 'Saint_Alicia_Card_Back.png' : 'Saint_Alicia_ORIGIN_LEGEND.png';
           link.download = filename;
