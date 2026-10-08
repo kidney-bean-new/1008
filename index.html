@@ -1297,8 +1297,6 @@
       const labelFoilVal = document.getElementById('label-foil-val');
       const labelGlareVal = document.getElementById('label-glare-val');
 
-      const originalArtSrc = './alicia_art.jpg';
-
       // 3D Motion Physics State
       let isInteracting = false;
       let isFlipped = false;
@@ -1306,6 +1304,19 @@
       let springTimeout = null;
 
       const maxTilt = 24; // Degrees
+	  const initialSnapshot = {
+        artSrc: cardArtImg.currentSrc || cardArtImg.src || './alicia_art.jpg',
+        foilVal: sliderFoil.value,
+        glareVal: sliderGlare.value,
+        shader: 'foil-silver-phantom',
+        texts: {}
+      };
+      // init text
+      document.querySelectorAll('[contenteditable="true"]').forEach(el => {
+        if (el.id) {
+          initialSnapshot.texts[el.id] = el.innerHTML;
+        }
+      });
 
       function updateCardTransform(xPct, yPct) {
         const rotY = (xPct - 0.5) * (maxTilt * 2);
@@ -1416,15 +1427,39 @@
         const reader = new FileReader();
         reader.onload = (loadEvent) => {
           cardArtImg.src = loadEvent.target.result;
-          showToast('卡面肖像插畫已成功更換！');
+          showToast('卡面插畫已成功更換！');
         };
         reader.readAsDataURL(file);
       });
 
       // Reset Art
       btnResetArt.addEventListener('click', () => {
-        cardArtImg.src = originalArtSrc;
-        showToast('已還原為原廠設定立繪！');
+        cardArtImg.src = initialSnapshot.artSrc;
+        artUploadInput.value = '';
+        sliderFoil.value = initialSnapshot.foilVal;
+        labelFoilVal.textContent = `${initialSnapshot.foilVal}%`;
+        document.documentElement.style.setProperty('--foil-opacity', (initialSnapshot.foilVal / 100).toString());
+
+        sliderGlare.value = initialSnapshot.glareVal;
+        labelGlareVal.textContent = `${initialSnapshot.glareVal}%`;
+        document.documentElement.style.setProperty('--glare-opacity', (initialSnapshot.glareVal / 100).toString());
+
+        const defaultShaderBtn = document.querySelector(`.shader-btn[data-shader="${initialSnapshot.shader}"]`);
+        if (defaultShaderBtn) defaultShaderBtn.click();
+
+        Object.keys(initialSnapshot.texts).forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.innerHTML = initialSnapshot.texts[id];
+        });
+
+        if (isFlipped) {
+          isFlipped = false;
+          card.classList.remove('flipped');
+        }
+
+        resetCardTransform();
+
+        showToast('已還原為初始設定狀態！');
       });
 
       // Mobile Gyroscope Handler
